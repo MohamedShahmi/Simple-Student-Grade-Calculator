@@ -32,7 +32,7 @@ public class StudentGradeCalculatorGUI {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
 
-        JLabel title = new JLabel("Student Grade Calculator", SwingConstants.CENTER);
+        JLabel title = new JLabel("Student Grade Calculator", SwingConstants.CENTER);  
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(new Color(25, 25, 112));
         mainPanel.add(title, gbc);
@@ -62,7 +62,7 @@ public class StudentGradeCalculatorGUI {
 
         // Add Subject Button
         gbc.gridy++;
-        JButton addSubjectBtn = new JButton("Add Subject");
+        JButton addSubjectBtn = new JButton("➕ Add Subject");
         addSubjectBtn.setBackground(new Color(70, 130, 180));
         addSubjectBtn.setForeground(Color.WHITE);
         addSubjectBtn.setFocusPainted(false);
@@ -72,7 +72,7 @@ public class StudentGradeCalculatorGUI {
 
         // Add Student Button
         gbc.gridy++;
-        JButton calcButton = new JButton("✅ Add Student");
+        JButton calcButton = new JButton("✅ Add Student");  
         calcButton.setBackground(new Color(60, 179, 113));
         calcButton.setForeground(Color.WHITE);
         calcButton.setFocusPainted(false);
@@ -129,6 +129,7 @@ public class StudentGradeCalculatorGUI {
             int total = 0;
             int validSubjects = 0;
 
+            // Collecting marks from the subject fields
             for (JTextField field : subjectFields) {
                 String text = field.getText().trim();
                 if (!text.isEmpty()) {
@@ -142,23 +143,29 @@ public class StudentGradeCalculatorGUI {
                 }
             }
 
+            // If no subjects were entered
             if (validSubjects == 0) {
                 JOptionPane.showMessageDialog(frame, "❗ Please enter marks for at least one subject.");
                 return;
             }
 
+            // Calculate average
             double average = (double) total / validSubjects;
             String grade = getGrade(average);
 
-            Student s = new Student(name, total, average, grade);
+            // Creating student object with the modified constructor
+            Student s = new Student(name, total, average, Student.Grade.valueOf(grade));
+
             studentList.add(s);
 
+            // Displaying the result
             resultArea.setText(""); 
-            resultArea.append(String.format("%-20s %-15s %-10s %-10s\n", "Name", "Total Marks", "Average", "Grade"));
+            resultArea.append(String.format("%-15s %-15s %-10s %-10s\n", "Name", "Total Marks", "Average", "Grade"));
             resultArea.append("------------------------------------------------------------\n");
 
+            // Display all student results
             for (Student student : studentList) {
-                resultArea.append(String.format("%-20s %-15d %-10.2f %-10s\n", student.name, student.total, student.average, student.grade));
+                resultArea.append(String.format("%-15s %-15d %-10.2f %-10s\n", student.getName(), student.getTotal(), student.getAverage(), student.getGrade()));
             }
 
             clearFields();
@@ -168,11 +175,10 @@ public class StudentGradeCalculatorGUI {
     }
 
     private String getGrade(double avg) {
-        if (avg >= 90) return "A+";
-        else if (avg >= 80) return "A";
-        else if (avg >= 70) return "B";
-        else if (avg >= 60) return "C";
-        else if (avg >= 50) return "D";
+        if (avg >= 75) return "A";
+        else if (avg >= 60) return "B";
+        else if (avg >= 50) return "C";
+        else if (avg >= 35) return "D";
         else return "F";
     }
 
@@ -185,20 +191,5 @@ public class StudentGradeCalculatorGUI {
 
     public static void main(String[] args) {
         new StudentGradeCalculatorGUI();
-    }
-
-    // Inner class for storing student info
-    class Student {
-        String name;
-        int total;
-        double average;
-        String grade;
-
-        public Student(String name, int total, double average, String grade) {
-            this.name = name;
-            this.total = total;
-            this.average = average;
-            this.grade = grade;
-        }
     }
 }
